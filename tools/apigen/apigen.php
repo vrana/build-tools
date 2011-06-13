@@ -25,14 +25,15 @@ ApiGen version 1.0
 ------------------
 ';
 
-$options = getopt('s:d:c:t:l:');
+$options = getopt('s:i:d:c:t:l:');
 
 if (!isset($options['s'], $options['d'])) { ?>
 Usage:
 	apigen [options]
 
 Options:
-	-s <path>  Name of a source directory to parse. Required.
+	-s <path>  Name of a source directory to parse. Multiple options are allowed. Required.
+	-i <path>  Directory or mask to ignore. Multiple options are allowed.
 	-d <path>  Folder where to save the generated documentation. Required.
 	-c <path>  Output config file.
 	-l <path>  Directory with additional libraries.
@@ -48,45 +49,53 @@ date_default_timezone_set('Europe/Prague');
 Debugger::enable();
 Debugger::timer();
 
-if (isset($options['l'])) {
-  $robot = new NetteX\Loaders\RobotLoader;
-  $robot->setCacheStorage(new NetteX\Caching\Storages\MemoryStorage);
-  $robot->addDirectory($options['l']);
-  $robot->register();
-}
-
-echo "Scanning folder $options[s]\n";
-$model = new Apigen\Model;
-$model->parse($options['s']);
-$count = count($model->getClasses());
-
-$model->expand();
-$countD = count($model->getClasses()) - $count;
-
-echo "Found $count classes and $countD system classes\n";
-
-
-
-$configPath = isset($options['c']) ? $options['c'] : __DIR__ . '/config.neon';
-$config = str_replace('%dir%', dirname($configPath), file_get_contents($configPath));
-$config = NetteX\Utils\Neon::decode($config);
-if (isset($options['t'])) {
-	$config['variables']['title'] = $options['t'];
-}
-
-
-echo "Generating documentation to folder $options[d]\n";
-@mkdir($options['d']);
-foreach (NetteX\Utils\Finder::find('*')->from($options['d'])->childFirst() as $item) {
-	if ($item->isDir()) {
-		rmdir($item);
-	} elseif ($item->isFile()) {
-		unlink($item);
+try {
+	if (isset($options['l'])) {
+		$robot = new NetteX\Loaders\RobotLoader;
+		$robot->setCacheStorage(new NetteX\Caching\Storages\MemoryStorage);
+		$robot->addDirectory($options['l']);
+		$robot->register();
 	}
+
+	$folders = (array) $options['s'];
+	$ignored = (array) (isset($options['i']) ? $options['i'] : NULL);
+	echo 'Scanning folder ' . implode(', ', $folders) . ($ignored ? ' excluding ' . implode(', ', $ignored) : '') . "\n";
+	$ignored[] = '.* *.bak *.tmp';
+
+	$model = new Apigen\Model;
+	$model->parse($folders, $ignored);
+	$count = count($model->getClasses());
+
+	$model->expand();
+	$countD = count($model->getClasses()) - $count;
+
+	echo "Found $count classes and $countD system classes\n";
+
+
+
+	$configPath = isset($options['c']) ? $options['c'] : __DIR__ . '/config.neon';
+	$config = str_replace('%dir%', dirname($configPath), file_get_contents($configPath));
+	$config = NetteX\Utils\Neon::decode($config);
+	if (isset($options['t'])) {
+		$config['variables']['title'] = $options['t'];
+	}
+
+
+	echo "Generating documentation to folder $options[d]\n";
+	@mkdir($options['d']);
+	foreach (NetteX\Utils\Finder::find('*')->from($options['d'])->childFirst() as $item) {
+		if ($item->isDir()) {
+			rmdir($item);
+		} elseif ($item->isFile()) {
+			unlink($item);
+		}
+	}
+	$generator = new Apigen\Generator($model);
+	$generator->generate($options['d'], $config);
+
+	echo 'Done. Total time: ' . (int) Debugger::timer() . " seconds\n";
+
+} catch (Exception $e) {
+	echo "Fatal error: {$e->getMessage()}\n";
+	die(254);
 }
-$generator = new Apigen\Generator($model);
-$generator->generate($options['d'], $config);
-
-
-
-echo 'Done. Total time: ' . (int) Debugger::timer() . " seconds\n";
