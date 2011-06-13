@@ -113,9 +113,7 @@ class ShrinkPHP
 		}
 
 
-		$set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
-		$space = $pending = FALSE;
-
+		$pending = FALSE;
 		reset($tokens);
 		while (list($num, $token) = each($tokens))
 		{
@@ -129,8 +127,10 @@ class ShrinkPHP
 			if ($name === T_CLASS || $name === T_INTERFACE) {
 				for ($i = $num + 1; @$tokens[$i][0] !== T_STRING; $i++);
 
-			} elseif ($name === T_COMMENT || $name === T_WHITESPACE) {
-				$space = TRUE;
+			} elseif ($name === T_COMMENT) {
+				if (substr($token, -1) === "\n") {
+					$this->output .= "\n";
+				}
 				continue;
 
 			} elseif ($name === T_PUBLIC && ($tokens[$num + 2][0] === T_FUNCTION || $tokens[$num + 4][0] === T_FUNCTION)) {
@@ -141,13 +141,11 @@ class ShrinkPHP
 				if (!$this->firstComment) {
 					$this->firstComment = $token;
 					$this->output .= $token . "\n";
-					$space = TRUE;
 					continue;
 
 				} elseif (preg_match('# @[A-Z]#', $token)) { // phpDoc annotations leave unchanged
 
 				} else {
-					$space = TRUE;
 					continue;
 				}
 
@@ -166,9 +164,9 @@ class ShrinkPHP
 				if ($pending === T_NAMESPACE) {
 					if ($this->namespace !== $expr) {
 						if ($this->namespace !== NULL) {
-							$this->output .= "}";
+							$this->output .= "}\n\n";
 						}
-						$this->output .= "namespace $expr{";
+						$this->output .= "namespace $expr {\n\n";
 						$this->uses = array();
 						$this->namespace = $expr;
 					}
@@ -179,7 +177,7 @@ class ShrinkPHP
 
 					} elseif (!isset($this->uses[$expr])) {
 						$this->uses[$expr] = TRUE;
-						$this->output .= "use\n$expr;";
+						$this->output .= "use $expr;";
 					}
 
 				} else { // T_REQUIRE_ONCE, T_REQUIRE, T_INCLUDE, T_INCLUDE_ONCE
@@ -203,12 +201,12 @@ class ShrinkPHP
 
 						if ($this->namespace !== $oldNamespace) {
 							if ($this->namespace !== NULL) {
-								$this->output .= "}";
+								$this->output .= "}\n";
 							}
 							$this->namespace = $oldNamespace;
 							$this->output .= "namespace $oldNamespace{";
 							if ($this->uses && $oldNamespace) {
-								$this->output .= "use\n" . implode(',', array_keys($this->uses)) . ";";
+								$this->output .= "use " . implode(',', array_keys($this->uses)) . ";";
 							}
 						}
 					} else {
@@ -232,15 +230,10 @@ class ShrinkPHP
 				$this->output = substr($this->output, 0, -1);
 
 			} elseif ($pending) {
-				$expr .= $token;
-				continue;
-			}
-
-			if ($space) {
-				if (strpos($set, substr($this->output, -1)) === FALSE && strpos($set, $token{0}) === FALSE) {
-					$this->output .= "\n";
+				if ($name !== T_WHITESPACE) {
+					$expr .= $token;
 				}
-				$space = FALSE;
+				continue;
 			}
 
 			$this->output .= $token;
@@ -255,7 +248,7 @@ class ShrinkPHP
 			$this->output .= "}";
 			$this->namespace = NULL;
 		}
-		return $this->output;
+		return preg_replace('#([ \t]*\r?\n){2,}#', "\n\n", $this->output);
 	}
 
 }
