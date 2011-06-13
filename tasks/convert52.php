@@ -187,6 +187,19 @@ class NClosureFix
 
 
 
+$project->convert52p = function(SplFileInfo $file) use ($project) {
+	$project->convert52($file, TRUE);
+};
+
+
+
+$project->convert52n = function(SplFileInfo $file) use ($project) {
+	$project->convert52($file, FALSE);
+};
+
+
+
+
 /**
  * Simple tokenizer for PHP.
  *
