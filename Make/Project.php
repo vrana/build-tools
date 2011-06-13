@@ -14,6 +14,9 @@ class Project
 	/** @var bool */
 	public $verbose = FALSE;
 
+	/** @var string */
+	public $logFile;
+
 	/** @var array */
 	private $callStack = array();
 
@@ -37,9 +40,7 @@ class Project
 
 		} catch (\Exception $e) {
 			$this->log("Execution failed: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
-			if ($this->verbose) {
-				$this->log($e->getTraceAsString());
-			}
+			$this->log($e->getTraceAsString(), $this->verbose);
 			$this->log("\nBUILD FAILED\n");
 		}
 
@@ -52,14 +53,18 @@ class Project
 	/**
 	 * Displays a message to the output.
 	 */
-	public function log($message)
+	public function log($message, $display = TRUE)
 	{
-		if (!$this->verbose && count($this->callStack) > 2) {
-			return;
+		if ($task = end($this->callStack)) {
+			$message = str_pad("[$task] ", 15 * (count($this->callStack) - 1), ' ', STR_PAD_LEFT) . $message;
 		}
-		$task = end($this->callStack);
-		echo ($task ? str_pad("[$task] ", 15 * (count($this->callStack) - 1), ' ', STR_PAD_LEFT) : '') . "$message\n";
-		flush();
+		if ($display && ($this->verbose || count($this->callStack) <= 2)) {
+			echo $message . "\n";
+			flush();
+		}
+		if ($this->logFile) {
+			file_put_contents($this->logFile, $message . PHP_EOL, FILE_APPEND);
+		}
 	}
 
 

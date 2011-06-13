@@ -24,6 +24,8 @@ $options = getopt('f:t:a:v');
 
 $project = new Project;
 $project->verbose = isset($options['v']);
+$project->logFile = rtrim(getcwd(), '\\/') . '/make.log';
+@unlink($project->logFile);
 DefaultTasks::initialize($project);
 
 
