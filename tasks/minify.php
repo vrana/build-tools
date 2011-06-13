@@ -25,23 +25,23 @@ $project->minify = function($source, $dest, $useNamespaces = TRUE) use ($project
 	$shrink->useNamespaces = $useNamespaces;
 
 	// put loader.php without loading part
-	file_put_contents("$source/_loader.php", preg_replace('#^(require|.*NetteLoader::).*;#m', '', file_get_contents("$source/loader.php")));
-	$shrink->addFile("$source/_loader.php");
-	unlink("$source/_loader.php");
+	$loader = file_get_contents("$source/loader.php");
+	$loader = preg_split('#^(require|.*NetteLoader::).*;\s*#m', $loader, -1, PREG_SPLIT_NO_EMPTY);
+	if (count($loader) !== 2) {
+		throw new Exception('Unable split loader.php.');
+	}
+	$shrink->addContent($loader[0]);
 
 	// put all files
 	foreach ($files as $file) {
 		if (basename($file) === 'NetteLoader.php') {
 			continue;
-		} elseif (basename($file) === 'Debugger.php') {
-			$last = $file;
 		} else {
 			$shrink->addFile($file);
 		}
 	}
-	if (isset($last)) {
-		$shrink->addFile($last);
-	}
+
+	$shrink->addContent("<?php $loader[1]");
 
 	$content = $shrink->getOutput();
 	$content = substr_replace($content, "<?php //netteloader=Nette\\Framework\n", 0, 5);
@@ -78,12 +78,15 @@ class ShrinkPHP
 	public function addFile($file)
 	{
 		$this->files[realpath($file)] = TRUE;
-
 		$content = file_get_contents($file);
-
 		// special handling for Connection.php && Statement.php
 		$content = preg_replace('#class (N?Connection|N?Statement) extends.+#s', "if (class_exists('PDO')){ $0 }", $content);
+		$this->addContent($content, dirname($file));
+	}
 
+
+	public function addContent($content, $dir = NULL)
+	{
 		$tokens = token_get_all($content);
 
 		if ($this->useNamespaces) { // find namespace
@@ -113,7 +116,8 @@ class ShrinkPHP
 		$set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
 		$space = $pending = FALSE;
 
-		foreach ($tokens as $num => $token)
+		reset($tokens);
+		while (list($num, $token) = each($tokens))
 		{
 			if (is_array($token)) {
 				$name = $token[0];
@@ -121,8 +125,6 @@ class ShrinkPHP
 			} else {
 				$name = NULL;
 			}
-
-			/*if ($name === T_COMMENT || $name === T_WHITESPACE) $name = 0; }*/
 
 			if ($name === T_CLASS || $name === T_INTERFACE) {
 				for ($i = $num + 1; @$tokens[$i][0] !== T_STRING; $i++);
@@ -132,6 +134,7 @@ class ShrinkPHP
 				continue;
 
 			} elseif ($name === T_PUBLIC && ($tokens[$num + 2][0] === T_FUNCTION || $tokens[$num + 4][0] === T_FUNCTION)) {
+				next($tokens);
 				continue;
 
 			} elseif ($name === T_DOC_COMMENT) {
@@ -181,8 +184,8 @@ class ShrinkPHP
 
 				} else { // T_REQUIRE_ONCE, T_REQUIRE, T_INCLUDE, T_INCLUDE_ONCE
 					$newFile = strtr($expr, array(
-						'__DIR__' => "'" . addcslashes(dirname($file), '\\\'') . "'",
-						'__FILE__' => "'" . addcslashes($file, '\\\'') . "'",
+						'__DIR__' => "'" . addcslashes($dir, '\\\'') . "'",
+						'dirname(__FILE__)' => "'" . addcslashes($dir, '\\\'') . "'",
 					));
 					$newFile = @eval('return ' . $newFile . ';');
 
@@ -225,14 +228,12 @@ class ShrinkPHP
 				if ($num === count($token-1)) continue; // eliminate last close tag
 				$this->inPHP = FALSE;
 
+			} elseif ($token === ')' && substr($this->output, -1) === ',') {  // array(... ,)
+				$this->output = substr($this->output, 0, -1);
+
 			} elseif ($pending) {
 				$expr .= $token;
 				continue;
-			}
-
-
-			if (substr($this->output, -1) === ',' && $token{0} === ')') { // array(... ,)
-				$this->output = substr($this->output, 0, -1);
 			}
 
 			if ($space) {
