@@ -34,7 +34,7 @@ $project->minify = function($source, $dest, $useNamespaces = TRUE) use ($project
 
 	// put all files
 	foreach ($files as $file) {
-		if (basename($file) === 'NetteLoader.php') {
+		if (basename($file) === 'NetteLoader.php' || basename($file) === 'loader.php') {
 			continue;
 		} else {
 			$shrink->addFile($file);

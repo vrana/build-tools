@@ -135,7 +135,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 			$parser->fetch(')');
  			if ($use = $parser->fetch(T_USE)) {
  				$parser->fetch('(');
-				$token .= 'extract(NClosureFix::$vars[\'.NClosureFix::uses(array('
+				$token .= 'extract(NCFix::$vars[\'.NCFix::uses(array('
 					. preg_replace('#&?\s*\$([^,\s]+)#', "'\$1'=>\$0", $parser->fetchUntil(')'))
 					. ')).\'], EXTR_REFS);';
 				$parser->fetch(')');
@@ -155,9 +155,10 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 	}
 
 	// closure support
-	if ($file->getFilename() === 'Framework.php') {
-		$s .= '
-class NClosureFix
+	if ($file->getFilename() === 'loader.php') {
+		$s = str_replace("define('NETTE'", '
+/** @internal */
+class NCFix
 {
 	static $vars = array();
 
@@ -166,7 +167,9 @@ class NClosureFix
 		self::$vars[] = $args;
 		return count(self::$vars)-1;
 	}
-}';
+}
+
+define(\'NETTE\'', $s);
 	}
 
 
