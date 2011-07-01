@@ -115,7 +115,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 
  		} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING, T_ENCAPSED_AND_WHITESPACE)) { // strings like 'Nette\Object'
  			$sl = $parser->isCurrent(T_CONSTANT_ENCAPSED_STRING) ? '1' : '1,2'; // num of slashes, for 0.9 compatibility
- 			$s .= preg_replace_callback('#Nette\\\\{'.$sl.'}(\w+\\\\{'.$sl.'})*\w+(?=[ ,.:\'()])#', function($m) use ($replaceClass) {
+ 			$s .= preg_replace_callback('#Nette\\\\{'.$sl.'}(\w+\\\\{'.$sl.'})*\w+(?=[ ,.:\'()]|\\\\\')#', function($m) use ($replaceClass) {
 				return $replaceClass(str_replace('\\\\', '\\', $m[0]));
  			}, $token);
 

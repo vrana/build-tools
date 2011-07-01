@@ -64,6 +64,7 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	$project->minify("$dir52n/Nette", "$dir52n/Nette-minified/nette.min.php", FALSE);
 
 	// lint & try run PHP files
+	$project->log("Linting files");
 	$project->lint($dir53, $project->phpExecutable);
 	$project->lint($dir52p, $project->php52Executable);
 	$project->lint($dir52n, $project->php52Executable);
