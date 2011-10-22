@@ -93,10 +93,10 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference");
 
 	// create archives
-	$project->zip("$distDir/archive/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
-	$project->zip("$distDir/$dir53.zip", $dir53);
-	$project->zip("$distDir/$dir52p.zip", $dir52p);
-	$project->zip("$distDir/$dir52n.zip", $dir52n);
+	$project->zip("$distDir/snapshots/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
+	$project->zip("$distDir/2.0/$dir53.zip", $dir53);
+	$project->zip("$distDir/2.0/$dir52p.zip", $dir52p);
+	$project->zip("$distDir/2.0/$dir52n.zip", $dir52n);
 };
 
 
