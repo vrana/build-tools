@@ -161,6 +161,7 @@ class ShrinkPHP
 				continue;
 
 			} elseif ($pending && ($name === T_CLOSE_TAG || ($name === NULL && ($token === ';' || $token === '{' || $token === ',') || ($pending === T_USE && $token === '(')))) { // end of special
+				$expr = trim(preg_replace('#\s+#', ' ', $expr));
 				if ($pending === T_NAMESPACE) {
 					if ($this->namespace !== $expr) {
 						if ($this->namespace !== NULL) {
@@ -230,9 +231,7 @@ class ShrinkPHP
 				$this->output = substr($this->output, 0, -1);
 
 			} elseif ($pending) {
-				if ($name !== T_WHITESPACE) {
-					$expr .= $token;
-				}
+				$expr .= $token;
 				continue;
 			}
 
