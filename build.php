@@ -97,6 +97,9 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	$project->zip("$distDir/2.0/$dir53.zip", $dir53);
 	$project->zip("$distDir/2.0/$dir52p.zip", $dir52p);
 	$project->zip("$distDir/2.0/$dir52n.zip", $dir52n);
+	$project->zip("$distDir/2.0/$dir53.tar.bz2", $dir53);
+	$project->zip("$distDir/2.0/$dir52p.tar.bz2", $dir52p);
+	$project->zip("$distDir/2.0/$dir52n.tar.bz2", $dir52n);
 };
 
 
