@@ -39,6 +39,8 @@ return array(
 	'Nette\Config\IniAdapter' => 'ConfigAdapterIni',
 	'Nette\Config\NeonAdapter' => 'ConfigAdapterNeon',
 	'Nette\Config\IAdapter' => 'IConfigAdapter',
+	'Nette\Config\Helpers' => 'ConfigHelpers',
+	'Nette\Config\Loaders' => 'ConfigLoaders',
 	'Nette\Database\Diagnostics\ConnectionPanel' => 'DatabasePanel',
 	'Nette\Database\Table\GroupedSelection' => 'GroupedTableSelection',
 	'Nette\Database\Table\ActiveRow' => 'TableRow',
