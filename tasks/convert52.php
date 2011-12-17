@@ -30,6 +30,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 	$s = preg_replace("#'NETTE_PACKAGE', '.*'#", "'NETTE_PACKAGE', 'PHP 5.2" . ($prefixed ? ' prefixed' : '') . "'", $s); // loader.php
 	$s = str_replace('{=Nette\Framework::VERSION', '{=' . ($prefixed ? 'N' : '') . 'Framework::VERSION', $s); // Homepage\default.latte
 	$s = str_replace(': Nette\Database\Connection', $prefixed ? ': NConnection' : ': Connection', $s); // CD-collection\app\config.neon
+	$s = str_replace(', Nette\Database\Reflection\DiscoveredReflection', $prefixed ? ', NDiscoveredReflection' : ', DiscoveredReflection', $s); // CD-collection\app\config.neon
 	$s = str_replace('$application->onStartup[] = function() {', '{', $s); // bootstrap.php
 	$s = str_replace('$application->onStartup[] = function() use ($application) {', '{', $s); // bootstrap.php
 	$s = str_replace('$form::', 'Form::', $s); // Form examples
