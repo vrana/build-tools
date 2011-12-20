@@ -12,13 +12,13 @@
 		<h1>{if $package != 'None'}Package {$package}{else}No package{/if}</h1>
 	{/if}
 
+	{include '@elementlist.latte'}
+
 	<table class="summary" id="packages" n:if="$subpackages">
 	<caption>Subpackages summary</caption>
 	<tr n:foreach="$subpackages as $package">
 		<td class="name"><a href="{$package|packageUrl}">{$package|subpackageName}</a></td>
 	</tr>
 	</table>
-
-	{include '@elementlist.latte'}
 </div>
 {/block}

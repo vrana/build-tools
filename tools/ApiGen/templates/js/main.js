@@ -51,7 +51,7 @@ $(function() {
 			autocompleteFound = true;
 			var location = window.location.href.split('/');
 			location.pop();
-			location.push(data[0] + '-' + data[1].replace(/[^\w]/g, '.') + '.html');
+			location.push((data[0] === 'class' ? '' : data[0] + '-') + data[1].replace(/[^\w]/g, '.') + '.html');
 			window.location = location.join('/');
 		}).closest('form')
 			.submit(function() {

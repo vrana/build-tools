@@ -60,7 +60,7 @@ p {
 hr {
 	margin: 2em 0 1em;
 	border: none;
-	border-top: 1px solid #cccccc;
+	border-top: 1px solid #e0e3e4;
 	height: 0;
 }
 
@@ -124,6 +124,12 @@ code a b {
 #menu li {
 	white-space: nowrap;
 	position: relative;
+}
+
+#menu a {
+	display: block;
+	padding: 0;
+	margin-right: 20px;
 }
 
 #menu .active > a, #menu > span {
@@ -237,7 +243,7 @@ code a b {
 /* Navigation */
 #navigation {
 	padding: 3px 8px;
-	background-color: #f6f6f4;
+	background-color: #f2f2ee;
 	height: 26px;
 }
 
@@ -342,16 +348,12 @@ dl.tree dd {
 	vertical-align: top;
 }
 
-.summary td:first-child {
+#methods.summary td:first-child, #constants.summary td:first-child, #properties.summary td:first-child {
 	text-align: right;
 }
 
-#packages.summary td:first-child, #namespaces.summary td:first-child, .inherited.summary td:first-child, .used.summary td:first-child {
-	text-align: left;
-}
-
 .summary tr:hover td {
-	background: #f6f6f4;
+	background: #f2f2ee;
 }
 
 .summary .description pre {
@@ -415,7 +417,7 @@ td.name, td.attributes {
 	line-height: 1;
 	font-size: 85%;
 	margin: 0;
-	color: #006aeb !important;
+	color: #9fc7f6 !important;
 }
 
 .list {
@@ -436,7 +438,7 @@ td.name, td.attributes {
 	height: 100%;
 	width: 5px;
 	left: 270px;
-	background: #1e5eb6 url('resize.png') left center no-repeat;
+	background: #f2f2ee url('resize.png') left center no-repeat;
 	cursor: e-resize;
 }
 
