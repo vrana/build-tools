@@ -11,7 +11,7 @@
  * @depend $project->apiGenExecutable
  * @depend $project->php
  */
-$project->apiGen = function($source, $dest) use ($project) {
+$project->apiGen = function($source, $dest, $config) use ($project) {
 	$project->log("Generating API documentation for $source");
-	$project->php('-d memory_limit=512M ' . escapeshellarg($project->apiGenExecutable) . ' -s ' . escapeshellarg($source) . ' -d ' . escapeshellarg($dest));
+	$project->php(escapeshellarg($project->apiGenExecutable) . ' -s ' . escapeshellarg($source) . ' -d ' . escapeshellarg($dest) . ' -c ' . escapeshellarg($config));
 };

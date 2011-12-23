@@ -176,7 +176,7 @@ define(\'NETTE\'', $s);
 
 	// add @package to phpDoc
 	if (!strpos($s, '@package') && $namespace) {
-		$s = preg_replace('#^ \*\/#m', " * @package $namespace\n\$0", $s, 1);
+		$s = preg_replace('#^ \*\/#m', " * @package $namespace\n\$0", $s);
 	}
 
 

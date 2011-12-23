@@ -17,7 +17,7 @@ use Nette\Utils\Finder;
 $project->gitExecutable = 'C:\Program Files\Git\bin\git.exe';
 $project->phpExecutable = realpath('tools/PHP-5.3/php.exe');
 $project->php52Executable = realpath('tools/PHP-5.2/php.exe');
-$project->apiGenExecutable = realpath('tools/apigen/apigen.php');
+$project->apiGenExecutable = realpath('tools/ApiGen/apigen.php');
 $project->zipExecutable = realpath('tools/7zip/7z.exe');
 $project->compilerExecutable = realpath('tools/Google-Closure-Compiler/compiler.jar');
 
@@ -88,9 +88,10 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	}
 
 	// build API doc
-	$project->apiGen("$dir53/Nette", "$dir53/API-reference");
-	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference");
-	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference");
+	$apiGenConfig = dirname($project->apiGenExecutable) . '/apigen.neon';
+	$project->apiGen("$dir53/Nette", "$dir53/API-reference", $apiGenConfig);
+	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference", $apiGenConfig);
+	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig);
 
 	// create archives
 	$project->zip("$distDir/snapshots/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
