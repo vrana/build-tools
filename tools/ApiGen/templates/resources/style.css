@@ -30,6 +30,7 @@ h2 {
 }
 
 h3 {
+	color: #808080;
 	font-size: 1.6em;
 	font-weight: normal;
 	margin-bottom: 2px;
@@ -43,13 +44,15 @@ h4 {
 }
 
 caption {
-	border: 1px solid #cccccc;
-	background: #ecede5;
+	border: 1px solid #D0CDC4;
+	background: #f2eee1;
 	font-weight: bold;
 	font-size: 1.2em;
 	padding: 3px 5px;
 	text-align: left;
 	margin-bottom: 0;
+	color: #808080;
+	text-shadow: 1px 1px 0 rgba(255,255,255, .8);
 }
 
 p {
@@ -60,7 +63,7 @@ p {
 hr {
 	margin: 2em 0 1em;
 	border: none;
-	border-top: 1px solid #e0e3e4;
+	border-top: 1px solid #D0CDC4;
 	height: 0;
 }
 
@@ -104,6 +107,7 @@ code a b {
 	width: 270px;
 	height: 100%;
 	position: fixed;
+	background: #fcfaf5;
 }
 
 /* Menu */
@@ -133,7 +137,7 @@ code a b {
 }
 
 #menu .active > a, #menu > span {
-	color: #333333;
+	color: black;
 	background: none;
 	font-weight: bold;
 }
@@ -177,6 +181,7 @@ code a b {
 	position: fixed;
 	left: 0;
 	right: 0;
+	position: relative;
 }
 
 #rightInner {
@@ -198,7 +203,7 @@ code a b {
 /* Autocomplete */
 .ac_results {
 	padding: 0;
-	border: 1px solid #cccccc;
+	border: 1px solid #D0CDC4;
 	background-color: #ffffff;
 	overflow: hidden;
 	z-index: 99999;
@@ -224,11 +229,7 @@ code a b {
 }
 
 .ac_results li strong {
-	color: #000000;
-}
-
-.ac_odd {
-	background-color: #eeeeee;
+	color: #006AEB;
 }
 
 .ac_over {
@@ -243,8 +244,9 @@ code a b {
 /* Navigation */
 #navigation {
 	padding: 3px 8px;
-	background-color: #f2f2ee;
+	background-color: #f2eee1;
 	height: 26px;
+	border-radius: 0 0 5px 0;
 }
 
 #navigation ul {
@@ -256,7 +258,7 @@ code a b {
 }
 
 #navigation ul + ul {
-	border-left: 1px solid #000000;
+	border-left: 1px solid #D0CDC4;
 	padding-left: 8px;
 }
 
@@ -269,25 +271,10 @@ code a b {
 }
 
 #navigation ul li.active {
-	background-color: #053368;
-	color: #ffffff;
+	color: black;
 	font-weight: bold;
 }
 
-#navigation ul li a {
-	color: #000000;
-	font-weight: bold;
-	padding: 0;
-}
-
-#navigation ul li span {
-	float: left;
-	padding: 0 3px;
-}
-
-#navigation ul li a:hover span, #navigation ul li a:active span, #navigation ul li a:focus span {
-	background-color: #006aeb;
-}
 
 /* Content */
 #content {
@@ -298,10 +285,11 @@ code a b {
 .description pre {
 	padding: .6em;
 	background: #fcfcf7;
+	border-radius: 5px;
 }
 
 #content > .description {
-	background: #ecede5;
+	background: #f2eee1;
 	padding: 1px 8px;
 	margin: 1.2em 0;
 }
@@ -324,7 +312,7 @@ dl.tree dd {
 }
 
 .summary {
-	border: 1px solid #cccccc;
+	border: 1px solid #D0CDC4;
 	border-collapse: collapse;
 	font-size: 1em;
 	width: 100%;
@@ -336,12 +324,12 @@ dl.tree dd {
 }
 
 .summary caption.switchable {
-	background: #ecede5 url('sort.png') no-repeat center right;
+	background: #f2eee1 url('sort.png') no-repeat center right;
 	cursor: pointer;
 }
 
 .summary td {
-	border: 1px solid #cccccc;
+	border: 1px solid #D0CDC4;
 	margin: 0;
 	padding: 3px 10px;
 	font-size: 1em;
@@ -353,11 +341,11 @@ dl.tree dd {
 }
 
 .summary tr:hover td {
-	background: #f2f2ee;
+	background: #EDF4FF;
 }
 
 .summary .description pre {
-	border: .5em solid #ecede5;
+	border: .5em solid #f2eee1;
 }
 
 .summary .description p {
@@ -438,7 +426,7 @@ td.name, td.attributes {
 	height: 100%;
 	width: 5px;
 	left: 270px;
-	background: #f2f2ee url('resize.png') left center no-repeat;
+	background: #f2eee1 url('resize.png') left center no-repeat;
 	cursor: e-resize;
 }
 
