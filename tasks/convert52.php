@@ -12,7 +12,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 
 	$s = $orig = file_get_contents($file);
 
-	if (strpos($s, '@phpversion 5.3')) { // delete 5.3 files
+	if (strpos($s, '@phpversion 5.3') || strpos($s, '@phpversion 5.4')) { // delete > 5.2
 		unlink($file);
 		return;
 	}

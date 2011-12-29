@@ -9,7 +9,7 @@
 $project->convert53 = function($file) {
 	$s = $orig = file_get_contents($file);
 
-	if (strpos($s, '@phpversion < 5.3')) { // delete 5.2 files
+	if (strpos($s, '@phpversion < 5.3') || strpos($s, '@phpversion 5.4')) { // delete non 5.3 files
 		unlink($file);
 		return;
 	}
