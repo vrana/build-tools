@@ -19,7 +19,10 @@ $project->netteLoader = function($folder) use ($project) {
 	// update NetteLoader.php
 	$list = array();
 	foreach ($robot->getIndexedClasses() as $class => $file) {
-		$list[strtolower($class)] = strtr(substr($file, strlen($folder)), '\\', '/');
+		$item = strtr(substr($file, strlen($folder), -4), '/', '\\');
+		if ($class !== 'Nette' . $item) {
+			$list[$class] = strtr($item, '\\', '/');
+		}
 	}
 	ksort($list);
 	$s = var_export($list, TRUE);
@@ -29,7 +32,7 @@ $project->netteLoader = function($folder) use ($project) {
 
 	$scriptFile = $folder . '/Loaders/NetteLoader.php';
 	$script = file_get_contents($scriptFile);
-	$script = preg_replace('#= array.*\)#sU', "= $s", $script, -1, $count);
+	$script = preg_replace('#list = array.*\)#sU', "list = $s", $script, -1, $count);
 	if ($count !== 1) {
 		throw new Exception('NetteLoader injection failed.');
 	}
