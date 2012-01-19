@@ -34,7 +34,7 @@ require 'tasks/php.php';
 require 'tasks/zip.php';
 
 
-$project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) use ($project) {
+$project->main = function($tag = 'master', $label = 'dev') use ($project) {
 	$project->log("Building {$label}");
 
 	$dir53 = "NetteFramework-{$label}-PHP5.3";
@@ -42,7 +42,7 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	$dir52n = "NetteFramework-{$label}-PHP5.2-nonprefix";
 	$distDir = "dist";
 
-	$project->exportGit($dir53, $branch, $label, $tag);
+	$project->exportGit($dir53, $tag);
 
 	// build specific packages
 	$project->delete($dir52p);
@@ -69,7 +69,7 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 	$project->lint($dir52p, $project->php52Executable);
 	$project->lint($dir52n, $project->php52Executable);
 
-	if ($branch !== 'v0.9.x') { // copy Nette to submodules
+	if (substr($tag, 0, 4) !== 'v0.9') { // copy Nette to submodules
 		$project->copy("$dir53/Nette", "$dir53/sandbox/libs/Nette");
 		$project->copy("$dir52p/Nette", "$dir52p/sandbox/libs/Nette");
 		$project->copy("$dir52n/Nette", "$dir52n/sandbox/libs/Nette");
@@ -105,22 +105,18 @@ $project->main = function($branch = 'master', $label = '2.0dev', $tag = NULL) us
 
 
 
-$project->exportGit = function($dir, $branch = 'master', $label = '2.0dev', $tag = NULL) use ($project) {
+$project->exportGit = function($dir, $tag = NULL) use ($project) {
 	$project->delete($dir);
-	$project->gitClone('git://github.com/nette/nette.git', $branch, $dir);
+	$project->gitClone('git://github.com/nette/nette.git', $tag, $dir);
 
-	if ($branch === 'v0.9.x') {
+	if (substr($tag, 0, 4) === 'v0.9') {
 		// 3rdParty
 		$project->gitClone('git://github.com/dg/dibi.git', 'master', "$dir/3rdParty/dibi");
 		$project->write("$dir/3rdParty/dibi/netterobots.txt", 'Disallow: /dibi-minified');
 	} else {
-		$project->gitClone('git://github.com/nette/examples.git', $branch, "$dir/examples");
-		$project->gitClone('git://github.com/nette/sandbox.git', $branch, "$dir/sandbox");
-		$project->gitClone('git://github.com/nette/tools.git', $branch, "$dir/tools");
-	}
-
-	if (isset($tag)) {
-		$project->git("--work-tree $dir checkout $tag", $dir);
+		$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
+		$project->gitClone('git://github.com/nette/sandbox.git', $tag, "$dir/sandbox");
+		$project->gitClone('git://github.com/nette/tools.git', NULL, "$dir/tools");
 	}
 
 	if (PHP_OS === 'WINNT') {

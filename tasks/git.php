@@ -31,11 +31,14 @@ $project->git = function($cmd, $dir = NULL) use ($project) {
  *
  * @depend $project->gitExecutable
  */
-$project->gitClone = function($url, $branch = NULL, $dir = NULL) use ($project) {
+$project->gitClone = function($url, $tag = NULL, $dir = NULL) use ($project) {
 	$project->log("Clonnig GIT repository $url");
 
 	$project->exec(escapeshellarg($project->gitExecutable) . " clone $url"
-		. ($branch ? " -b $branch" : '')
 		. ($dir ? ' ' . escapeshellarg($dir) : '')
 	);
+
+	if ($tag) {
+		$project->git("--work-tree $dir checkout $tag", $dir);
+	}
 };
