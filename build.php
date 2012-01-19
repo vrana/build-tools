@@ -89,9 +89,9 @@ $project->main = function($tag = 'master', $label = 'dev') use ($project) {
 
 	// build API doc
 	$apiGenConfig = dirname($project->apiGenExecutable) . '/apigen.neon';
-	$project->apiGen("$dir53/Nette", "$dir53/API-reference", $apiGenConfig);
-	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference", $apiGenConfig);
-	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig);
+	$project->apiGen("$dir53/Nette", "$dir53/API-reference", $apiGenConfig, "Nette Framework $label API");
+	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2) API");
+	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2) API");
 
 	// create archives
 	$project->zip("$distDir/snapshots/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
