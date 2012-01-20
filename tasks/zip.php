@@ -13,12 +13,17 @@
 $project->zip = function($archive, $items) use ($project) {
 	$project->log("Creating archive $archive");
 
-	if ($tarArchive = strpos($archive, '.tar.')) {
+	if (substr($archive, -4) === '.tgz') {
+		$tarArchive = substr($archive, 0, -3) . 'tar';
+	} elseif ($tarArchive = strpos($archive, '.tar.')) {
 		$tarArchive = substr($archive, 0, $tarArchive + 4);
+	}
+
+	if ($tarArchive) {
 		$project->zip($tarArchive, $items);
 		$items = $tarArchive;
 	}
-	
+
 	$cmd = escapeshellarg($project->zipExecutable) . ' a -mx9 ' . escapeshellarg($archive);
 	foreach ((array) $items as $item) {
 		$cmd .= ' ' . escapeshellarg($item);
@@ -29,7 +34,7 @@ $project->zip = function($archive, $items) use ($project) {
 	}
 
 	$project->exec($cmd);
-	
+
 	if ($tarArchive) {
 		unlink($tarArchive);
 	}
