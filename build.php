@@ -103,6 +103,24 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 	$project->zip("$distDir/$dir53.tar.bz2", $dir53);
 	$project->zip("$distDir/$dir52p.tar.bz2", $dir52p);
 	$project->zip("$distDir/$dir52n.tar.bz2", $dir52n);
+
+
+	// build PEAR
+	$dirPear = "Nette-$label";
+	$project->log("Building PEAR package");
+	$project->delete($dirPear);
+	$project->copy("$dir53/Nette", "$dirPear/Nette");
+	$project->copy("$dir53/readme.txt", "$dirPear/readme.txt");
+	$project->copy("$dir53/license.txt", "$dirPear/license.txt");
+	$project->latte("tasks/package.xml.latte", "package.xml", array(
+		'time' => time(),
+		'version' => $label,
+		'state' => 'stable',
+		'files' => Finder::findFiles('*')->from($dirPear),
+	));
+
+	$project->zip("$distDir/$dirPear.tgz", array($dirPear, "package.xml"));
+	$project->delete("package.xml");
 };
 
 

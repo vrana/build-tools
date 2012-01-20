@@ -1,0 +1,73 @@
+{* http://pear.php.net/manual/en/guide.developers.package2.intro.php *}
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.3" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+
+	<name>Nette</name>
+	<channel>pear.nette.org</channel>
+	<summary>Nette Framework</summary>
+	<description>Nette Framework is a powerful, component-based and event-driven framework
+	for creating web applications and services in PHP 5.2 &amp; 5.3. Nette Framework
+	is designed with simplicity, speed and flexibility in mind. It allows developers
+	to easy built better websites.
+
+	Nette Framework focuses on security and performance and is definitely one of
+	the safest and fastest PHP frameworks. Nette Framework support the latest
+	technologies and approaches like AJAX, HTML5, SEO, DRY, KISS, MVC, etc.</description>
+	<lead>
+		<name>David Grudl</name>
+		<user>dg</user>
+		<email>david@grudl.com</email>
+		<active>yes</active>
+	</lead>
+	<date>{$time|date:"Y-m-d"}</date>
+	<time>{$time|date:"H:i:s"}</time>
+	<version>
+		<release>{$version}</release>
+		<api>{$version}</api>
+	</version>
+	<stability>
+		<release>{$state}</release>
+		<api>{$state}</api>
+	</stability>
+	<license uri="http://nette.org/en/license">New BSD, GPL v2, GPL v3</license>
+	<notes>
+	-
+	</notes>
+	<contents>
+		<dir name="/">
+			<file n:foreach="$files as $file" name="{$iterator->getInnerIterator()->getSubPathname()|replace:'\\':'/'}" n:if="$iterator->getInnerIterator()->getSubPathname()" role="php" />
+		</dir>
+	</contents>
+	<dependencies>
+		<required>
+			<php>
+				<min>5.3.0</min>
+			</php>
+			<pearinstaller>
+				<min>1.4.0</min>
+			</pearinstaller>
+			<extension>
+				<name>iconv</name>
+			</extension>
+			<extension>
+				<name>tokenizer</name>
+			</extension>
+		</required>
+		<optional>
+			<extension>
+				<name>mbstring</name>
+			</extension>
+			<extension>
+				<name>fileinfo</name>
+			</extension>
+			<extension>
+				<name>gd</name>
+			</extension>
+			<extension>
+				<name>memcache</name>
+			</extension>
+		</optional>
+	</dependencies>
+	<phprelease />
+</package>
