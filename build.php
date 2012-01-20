@@ -25,6 +25,7 @@ $project->compilerExecutable = realpath('tools/Google-Closure-Compiler/compiler.
 // add custom tasks
 require 'tasks/apiGen.php';
 require 'tasks/git.php';
+require 'tasks/latte.php';
 require 'tasks/minify.php';
 require 'tasks/minifyJs.php';
 require 'tasks/netteLoader.php';
