@@ -42,6 +42,9 @@ $project->minify = function($source, $dest, $useNamespaces = TRUE) use ($project
 	}
 
 	$shrink->addContent("<?php $loader[1]");
+	if (is_file("$source/Diagnostics/shortcuts.php")) {
+		$shrink->addFile("$source/Diagnostics/shortcuts.php");
+	}
 
 	$content = $shrink->getOutput();
 	$content = substr_replace($content, "<?php //netteloader=Nette\\Framework\n", 0, 5);
