@@ -35,13 +35,13 @@ require 'tasks/php.php';
 require 'tasks/zip.php';
 
 
-$project->main = function($tag = 'master', $label = 'dev') use ($project) {
+$project->main = function($tag = 'master', $label = '1.0') use ($project) {
 	$project->log("Building {$label}");
 
 	$dir53 = "NetteFramework-{$label}-PHP5.3";
 	$dir52p = "NetteFramework-{$label}-PHP5.2";
 	$dir52n = "NetteFramework-{$label}-PHP5.2-nonprefix";
-	$distDir = "dist";
+	$distDir = "dist/" . substr($label, 0, 3);
 
 	$project->exportGit($dir53, $tag);
 
@@ -95,13 +95,14 @@ $project->main = function($tag = 'master', $label = 'dev') use ($project) {
 	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2) API");
 
 	// create archives
-	$project->zip("$distDir/snapshots/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
-	$project->zip("$distDir/2.0/$dir53.zip", $dir53);
-	$project->zip("$distDir/2.0/$dir52p.zip", $dir52p);
-	$project->zip("$distDir/2.0/$dir52n.zip", $dir52n);
-	$project->zip("$distDir/2.0/$dir53.tar.bz2", $dir53);
-	$project->zip("$distDir/2.0/$dir52p.tar.bz2", $dir52p);
-	$project->zip("$distDir/2.0/$dir52n.tar.bz2", $dir52n);
+	$project->zip("$distDir/../snapshots/NetteFramework-{$label}-(".date('Y-m-d').").7z", array($dir53, $dir52p, $dir52n));
+
+	$project->zip("$distDir/$dir53.zip", $dir53);
+	$project->zip("$distDir/$dir52p.zip", $dir52p);
+	$project->zip("$distDir/$dir52n.zip", $dir52n);
+	$project->zip("$distDir/$dir53.tar.bz2", $dir53);
+	$project->zip("$distDir/$dir52p.tar.bz2", $dir52p);
+	$project->zip("$distDir/$dir52n.tar.bz2", $dir52n);
 };
 
 
@@ -110,13 +111,13 @@ $project->exportGit = function($dir, $tag = NULL) use ($project) {
 	$project->delete($dir);
 	$project->gitClone('git://github.com/nette/nette.git', $tag, $dir);
 
-	if (substr($tag, 0, 4) === 'v0.9') {
-		// 3rdParty
+	$major = preg_match('#^v\d\.\d#', $tag, $m) ? $m[0] : NULL;
+	if ($major === 'v0.9') {
 		$project->gitClone('git://github.com/dg/dibi.git', 'master', "$dir/3rdParty/dibi");
 		$project->write("$dir/3rdParty/dibi/netterobots.txt", 'Disallow: /dibi-minified');
 	} else {
-		$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
-		$project->gitClone('git://github.com/nette/sandbox.git', $tag, "$dir/sandbox");
+		$project->gitClone('git://github.com/nette/examples.git', $major, "$dir/examples");
+		$project->gitClone('git://github.com/nette/sandbox.git', $major, "$dir/sandbox");
 		$project->gitClone('git://github.com/nette/tools.git', NULL, "$dir/tools");
 	}
 
