@@ -2,7 +2,7 @@
 /**
  * PHP Token Reflection
  *
- * Version 1.0.0 RC 2
+ * Version 1.2
  *
  * LICENSE
  *
@@ -70,4 +70,11 @@ interface IReflection
 	 * @return boolean
 	 */
 	public function __isset($key);
+
+	/**
+	 * Returns an element pretty (docblock compatible) name.
+	 *
+	 * @return string
+	 */
+	public function getPrettyName();
 }

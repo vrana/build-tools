@@ -2,7 +2,7 @@
 /**
  * PHP Token Reflection
  *
- * Version 1.0.0 RC 2
+ * Version 1.2
  *
  * LICENSE
  *
@@ -223,6 +223,16 @@ class ReflectionParameter extends InternalReflectionParameter implements IReflec
 	}
 
 	/**
+	 * Returns an element pretty (docblock compatible) name.
+	 *
+	 * @return string
+	 */
+	public function getPrettyName()
+	{
+		return str_replace('()', '($' . $this->getName() . ')', $this->getDeclaringFunction()->getPrettyName());
+	}
+
+	/**
 	 * Magic __get method.
 	 *
 	 * @param string $key Variable name
@@ -230,7 +240,7 @@ class ReflectionParameter extends InternalReflectionParameter implements IReflec
 	 */
 	final public function __get($key)
 	{
-		return TokenReflection\ReflectionBase::get($this, $key);
+		return TokenReflection\ReflectionElement::get($this, $key);
 	}
 
 	/**
@@ -241,7 +251,7 @@ class ReflectionParameter extends InternalReflectionParameter implements IReflec
 	 */
 	final public function __isset($key)
 	{
-		return TokenReflection\ReflectionBase::exists($this, $key);
+		return TokenReflection\ReflectionElement::exists($this, $key);
 	}
 
 	/**
@@ -250,14 +260,14 @@ class ReflectionParameter extends InternalReflectionParameter implements IReflec
 	 * @param \ReflectionClass $internalReflection Internal reflection instance
 	 * @param \TokenReflection\Broker $broker Reflection broker instance
 	 * @return \TokenReflection\Php\ReflectionParameter
-	 * @throws \TokenReflection\Exception\Runtime If an invalid internal reflection object was provided.
+	 * @throws \TokenReflection\Exception\RuntimeException If an invalid internal reflection object was provided.
 	 */
 	public static function create(Reflector $internalReflection, Broker $broker)
 	{
 		static $cache = array();
 
 		if (!$internalReflection instanceof InternalReflectionParameter) {
-			throw new Exception\Runtime(sprintf('Invalid reflection instance provided: "%s", ReflectionParameter expected.', get_class($internalReflection)), Exception\Runtime::INVALID_ARGUMENT);
+			throw new Exception\RuntimeException('Invalid reflection instance provided, ReflectionParameter expected.', Exception\RuntimeException::INVALID_ARGUMENT);
 		}
 
 		$class = $internalReflection->getDeclaringClass();

@@ -1,20 +1,22 @@
 # Source file or directory to parse
-source: ''
+source:
 # Directory where to save the generated documentation
-destination: ''
+destination:
+# List of allowed file extensions
+extensions: [php]
 # Mask to exclude file or directory from processing
-exclude: ''
+exclude:
 # Don't generate documentation for classes from file or directory with this mask
-skipDocPath: ''
+skipDocPath:
 # Don't generate documentation for classes with this name prefix
-skipDocPrefix: ''
+skipDocPrefix:
 # Character set of source files
-charset: ['UTF-8']
+charset: UTF-8
 # Main project name prefix
-main: ''
+main:
 
 # Title of generated documentation
-title: 'Nette Framework API documentation'
+title: 'Nette Framework'
 # Documentation base URL
 baseUrl: 'http://api.nette.org/2.0'
 # Google Custom Search ID
@@ -22,11 +24,15 @@ googleCseId: '011549293477758430224:vxofa9ufnhc'
 # Google Custom Search label
 googleCseLabel: 'api'
 # Google Analytics tracking code
-googleAnalytics: ''
+googleAnalytics:
 # Template config file
 templateConfig: './templates/config.neon'
+# Grouping of classes
+groups: auto
 # List of allowed HTML tags in documentation
 allowedHtml: [b, i, a, ul, ol, li, p, br, var, samp, kbd, tt]
+# Element types for search input autocomplete
+autocomplete: [classes, constants, functions]
 
 # Generate documentation for methods and properties with given access level
 accessLevels: [public, protected]
@@ -45,7 +51,7 @@ sourceCode: Yes
 # Add a link to download documentation as a ZIP archive
 download: No
 # Save a checkstyle report of poorly documented elements into a file
-report: ''
+report:
 
 # Wipe out the destination directory first
 wipeout: Yes
