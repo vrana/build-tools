@@ -2,7 +2,7 @@
 /**
  * PHP Token Reflection
  *
- * Version 1.0.0 RC 2
+ * Version 1.2
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
 
 namespace TokenReflection\Php;
 
-use TokenReflection;
+use TokenReflection, TokenReflection\Dummy, TokenReflection\Invalid;
 use TokenReflection\Broker, TokenReflection\Exception, Reflector;
 
 /**
@@ -72,6 +72,7 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	 * @param mixed $value Constant value
 	 * @param \TokenReflection\Broker $broker Reflection broker
 	 * @param \TokenReflection\Php\ReflectionClass $parent Defining class reflection
+	 * @throws \TokenReflection\Exception\RuntimeException If real parent class could not be determined.
 	 */
 	public function __construct($name, $value, Broker $broker, ReflectionClass $parent = null)
 	{
@@ -80,8 +81,35 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 		$this->broker = $broker;
 
 		if (null !== $parent) {
-			$this->declaringClassName = $parent->getName();
-			$this->userDefined = $parent->isUserDefined();
+			$realParent = null;
+
+			$parentConstants = $parent->getOwnConstants();
+			if (isset($parentConstants[$name])) {
+				$realParent = $parent;
+			}
+
+			foreach ($parent->getParentClasses() as $grandParent) {
+				$grandParentConstants = $grandParent->getOwnConstants();
+				if (isset($grandParentConstants[$name])) {
+					$realParent = $grandParent;
+					break;
+				}
+			}
+
+			foreach ($parent->getInterfaces() as $interface) {
+				$interfaceConstants = $interface->getOwnConstants();
+				if (isset($interfaceConstants[$name])) {
+					$realParent = $interface;
+					break;
+				}
+			}
+
+			if (null === $realParent) {
+				throw new Exception\RuntimeException('Could not determine constant real parent class.', Exception\RuntimeException::DOES_NOT_EXIST, $this);
+			}
+
+			$this->declaringClassName = $realParent->getName();
+			$this->userDefined = $realParent->isUserDefined();
 		} else {
 			$declared = get_defined_constants(false);
 			if (!isset($declared[$name])) {
@@ -295,6 +323,16 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	}
 
 	/**
+	 * Returns an element pretty (docblock compatible) name.
+	 *
+	 * @return string
+	 */
+	public function getPrettyName()
+	{
+		return null === $this->declaringClassName ? $this->name : sprintf('%s::%s', $this->declaringClassName, $this->name);
+	}
+
+	/**
 	 * Returns the string representation of the reflection object.
 	 *
 	 * @return string
@@ -317,7 +355,7 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	 * @param string $constant Constant name
 	 * @param boolean $return Return the export instead of outputting it
 	 * @return string|null
-	 * @throws \TokenReflection\Exception\Runtime If requested parameter doesn't exist.
+	 * @throws \TokenReflection\Exception\RuntimeException If requested parameter doesn't exist.
 	 */
 	public static function export(Broker $broker, $class, $constant, $return = false)
 	{
@@ -325,14 +363,17 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 		$constantName = $constant;
 
 		if (null === $className) {
-			$constant = $broker->getConstant($constantName);
-			if (null === $constant) {
-				throw new Exception\Runtime(sprintf('Constant %s does not exist.', $constantName), Exception\Runtime::DOES_NOT_EXIST);
+			try {
+				$constant = $broker->getConstant($constantName);
+			} catch (Exception\BrokerException $e) {
+				throw new Exception\RuntimeException(sprintf('Constant %s does not exist.', $constantName), Exception\RuntimeException::DOES_NOT_EXIST);
 			}
 		} else {
 			$class = $broker->getClass($className);
-			if ($class instanceof Dummy\ReflectionClass) {
-				throw new Exception\Runtime(sprintf('Class %s does not exist.', $className), Exception\Runtime::DOES_NOT_EXIST);
+			if ($class instanceof Invalid\ReflectionClass) {
+				throw new Exception\RuntimeException('Class is invalid.', Exception\RuntimeException::UNSUPPORTED);
+			} elseif ($class instanceof Dummy\ReflectionClass) {
+				throw new Exception\RuntimeException(sprintf('Class %s does not exist.', $className), Exception\RuntimeException::DOES_NOT_EXIST);
 			}
 			$constant = $class->getConstantReflection($constantName);
 		}
@@ -365,6 +406,18 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	}
 
 	/**
+	 * Returns if the constant definition is valid.
+	 *
+	 * Internal constants are always valid.
+	 *
+	 * @return boolean
+	 */
+	public function isValid()
+	{
+		return true;
+	}
+
+	/**
 	 * Magic __get method.
 	 *
 	 * @param string $key Variable name
@@ -372,7 +425,7 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	 */
 	final public function __get($key)
 	{
-		return TokenReflection\ReflectionBase::get($this, $key);
+		return TokenReflection\ReflectionElement::get($this, $key);
 	}
 
 	/**
@@ -383,7 +436,7 @@ class ReflectionConstant implements IReflection, TokenReflection\IReflectionCons
 	 */
 	final public function __isset($key)
 	{
-		return TokenReflection\ReflectionBase::exists($this, $key);
+		return TokenReflection\ReflectionElement::exists($this, $key);
 	}
 
 	/**
