@@ -129,13 +129,12 @@ $project->exportGit = function($dir, $tag = NULL) use ($project) {
 	$project->delete($dir);
 	$project->gitClone('git://github.com/nette/nette.git', $tag, $dir);
 
-	$major = preg_match('#^v\d\.\d#', $tag, $m) ? $m[0] : NULL;
-	if ($major === 'v0.9') {
+	if (substr($tag, 0, 4) === 'v0.9') {
 		$project->gitClone('git://github.com/dg/dibi.git', 'master', "$dir/3rdParty/dibi");
 		$project->write("$dir/3rdParty/dibi/netterobots.txt", 'Disallow: /dibi-minified');
 	} else {
-		$project->gitClone('git://github.com/nette/examples.git', $major, "$dir/examples");
-		$project->gitClone('git://github.com/nette/sandbox.git', $major, "$dir/sandbox");
+		$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
+		$project->gitClone('git://github.com/nette/sandbox.git', $tag, "$dir/sandbox");
 		$project->gitClone('git://github.com/nette/tools.git', NULL, "$dir/tools");
 	}
 
