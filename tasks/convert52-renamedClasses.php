@@ -30,6 +30,7 @@ return array(
 	'Nette\Application\Request' => 'PresenterRequest',
 	'Nette\Application\IResponse' => 'IPresenterResponse',
 	'Nette\Application\UI\Form' => 'AppForm',
+	'NetteModule\MicroPresenter' => 'Nette_MicroPresenter',
 	'Nette\Forms\Controls\BaseControl' => 'FormControl',
 	'Nette\Forms\ControlGroup' => 'FormGroup',
 	'Nette\Forms\Container' => 'FormContainer',
