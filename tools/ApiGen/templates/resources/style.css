@@ -19,21 +19,13 @@ body {
 
 h1, h2, h3, h4, caption {
 	font-family: Trebuchet MS, 'Geneva CE', lucida, sans-serif;
-	color: #053368;
+	color: #333;
 }
 
 h1 {
-	color: #1e5eb6;
 	font-size: 230%;
 	font-weight: normal;
 	margin: .3em 0;
-}
-
-h2 {
-	color: #1e5eb6;
-	font-size: 150%;
-	font-weight: normal;
-	margin: -.3em 0 .3em 0;
 }
 
 h3 {
@@ -81,7 +73,7 @@ a {
 }
 
 h1 a {
-	color: #1e5eb6;
+	color: #333;
 }
 
 a:hover, a:active, a:focus, a:hover b, a:hover var {
