@@ -83,7 +83,7 @@ class ShrinkPHP
 		$this->files[realpath($file)] = TRUE;
 		$content = file_get_contents($file);
 		// special handling for Connection.php && Statement.php
-		$content = preg_replace('#class (N?Connection|N?Statement) extends.+#s', "if (class_exists('PDO')){ $0 }", $content);
+		$content = preg_replace('#class \S+ extends \\\\?PDO.+#s', "if (class_exists('PDO')){ $0 }", $content);
 		$this->addContent($content, dirname($file));
 	}
 

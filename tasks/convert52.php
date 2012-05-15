@@ -24,6 +24,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 	$s = str_replace('new static', 'new self', $s);
 	$s = str_replace('static::', 'self::', $s);
 	$s = str_replace('get_called_class()', '__CLASS__', $s);
+	$s = str_replace('E_USER_DEPRECATED', 'E_USER_WARNING', $s);
 	$s = preg_replace('#(?<=[(= ])([^() ]+(?:\([^()]+\))?) \?: #', '($tmp=$1) ? $tmp : ', $s); // expand ternary short cut
 	$s = preg_replace('#/\\*5\.2\*\s*(.*?)\s*\\*/#s', '$1', $s); // uncomment /*5.2* */
 	$s = preg_replace('#/\\*\\*/.*?/\\*\\*/\\s*#s', '', $s);  // remove /**/ ... /**/
@@ -34,6 +35,7 @@ $project->convert52 = function(SplFileInfo $file, $prefixed) {
 	$s = str_replace(', Nette\Database\Reflection\DiscoveredReflection', $prefixed ? ', NDiscoveredReflection' : ', DiscoveredReflection', $s); // CD-collection\app\config.neon
 	$s = str_replace('$application->onStartup[] = function() {', '{', $s); // bootstrap.php
 	$s = str_replace('$application->onStartup[] = function() use ($application) {', '{', $s); // bootstrap.php
+	$s = str_replace('$configurator::', $prefixed ? 'NConfigurator::' : 'Configurator::', $s); // bootstrap.php in comment
 	$s = str_replace('$form::', 'Form::', $s); // Form examples
 	$s = str_replace('$node::', 'Nette\Latte\MacroNode::', $s); // Latte
 	$s = str_replace('Nette\Database\Drivers\\\\', $prefixed ? 'N' : '', $s); // Nette\Database\Connection.php
