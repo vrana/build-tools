@@ -2,7 +2,7 @@
 /**
  * PHP Token Reflection
  *
- * Version 1.2
+ * Version 1.2.2
  *
  * LICENSE
  *
@@ -204,7 +204,7 @@ class ReflectionAnnotation
 				}
 
 				// @annotation
-				if (preg_match('~^@([\\S]+)\\s*(.*)~', $line, $matches)) {
+				if (preg_match('~^\\s*@([\\S]+)\\s*(.*)~', $line, $matches)) {
 					$name = $matches[1];
 					$this->annotations[$name][] = $matches[2];
 					continue;
