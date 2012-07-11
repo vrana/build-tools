@@ -29,7 +29,7 @@ h1 {
 }
 
 h3 {
-	color: #808080;
+	color: #666;
 	font-size: 1.6em;
 	font-weight: normal;
 	margin-bottom: 2px;
@@ -50,8 +50,7 @@ caption {
 	padding: 3px 5px;
 	text-align: left;
 	margin-bottom: 0;
-	color: #808080;
-	text-shadow: 1px 1px 0 rgba(255,255,255, .8);
+	color: #777;
 }
 
 p {
@@ -212,6 +211,13 @@ code a b {
 #search input.text {
 	padding: 3px 5px;
 	width: 250px;
+	border: none;
+	background: #BBB;
+	color: black;
+}
+
+#search input.text:focus {
+	background: white;
 }
 
 /* Autocomplete */
@@ -258,7 +264,7 @@ code a b {
 /* Navigation */
 #navigation {
 	padding: 3px 8px;
-	background-color: #f2eee1;
+	background-color: #333;
 	height: 26px;
 	border-radius: 0 0 5px 0;
 }
@@ -285,10 +291,13 @@ code a b {
 }
 
 #navigation ul li.active {
-	color: black;
+	color: white;
 	font-weight: bold;
 }
 
+#navigation a {
+	color: #FFFF99;
+}
 
 /* Content */
 #content {
@@ -436,7 +445,7 @@ div.invalid {
 	height: 100%;
 	width: 5px;
 	left: 270px;
-	background: #f2eee1 url('resize.png') left center no-repeat;
+	background: #E4E2DA url('resize.png') left center no-repeat;
 	cursor: e-resize;
 }
 
