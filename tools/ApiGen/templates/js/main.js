@@ -1,5 +1,5 @@
 /*!
- * ApiGen 2.6.1 - API documentation generator for PHP 5.3+
+ * ApiGen 2.7.0 - API documentation generator for PHP 5.3+
  *
  * Copyright (c) 2010-2011 David Grudl (http://davidgrudl.com)
  * Copyright (c) 2011-2012 Jaroslav Hanslík (https://github.com/kukulich)
@@ -54,13 +54,23 @@ $(function() {
 			scrollHeight: 200,
 			max: 20,
 			formatItem: function(data) {
-				return data[1].replace(/^(.+\\)(.+)$/, '<small>$1</small>$2');
+				return data[1].replace(/^(.+\\)(.+)$/, '<span><small>$1</small>$2</span>');
 			},
 			formatMatch: function(data) {
 				return data[1];
 			},
 			formatResult: function(data) {
 				return data[1];
+			},
+			show: function($list) {
+				var $items = $('li span', $list);
+				var maxWidth = Math.max.apply(null, $items.map(function() {
+					return $(this).width();
+				}));
+				// 10px padding
+				$list
+					.width(Math.max(maxWidth + 10, $search.innerWidth()))
+					.css('left', $search.offset().left + $search.outerWidth() - $list.outerWidth());
 			}
 		}).result(function(event, data) {
 			autocompleteFound = true;
@@ -73,6 +83,8 @@ $(function() {
 			}
 			location.push(file);
 			window.location = location.join('/');
+			$(this).closest('form').prop('action', location.join('/')); // workaround for Opera bug
+
 		}).closest('form')
 			.submit(function() {
 				var query = $search.val();
@@ -121,22 +133,10 @@ $(function() {
 		$caption.click();
 	}
 
-	// Delayed hover efect on summary
+	// Open details
 	if (ApiGen.config.options.elementDetailsCollapsed) {
-		var timeout;
 		$('tr', $content).filter(':has(.detailed)')
-			.hover(function() {
-				clearTimeout(timeout);
-				var $this = $(this);
-				timeout = setTimeout(function() {
-					$('.short', $this).hide();
-					$('.detailed', $this).show();
-				}, 500);
-			}, function() {
-				clearTimeout(timeout);
-			}).click(function() {
-				// Immediate hover effect on summary
-				clearTimeout(timeout);
+			.click(function() {
 				var $this = $(this);
 				$('.short', $this).hide();
 				$('.detailed', $this).show();

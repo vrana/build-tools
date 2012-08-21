@@ -14,7 +14,7 @@ use Nette\Utils\Finder;
 
 
 // configuration
-$project->gitExecutable = 'C:\Program Files\Git\bin\git.exe';
+$project->gitExecutable = 'C:\Program Files (x86)\Git\bin\git.exe';
 $project->phpExecutable = realpath('tools/PHP-5.3/php.exe');
 $project->php52Executable = realpath('tools/PHP-5.2/php.exe');
 $project->apiGenExecutable = realpath('tools/ApiGen/apigen.php');
@@ -91,8 +91,8 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 	// build API doc
 	$apiGenConfig = dirname($project->apiGenExecutable) . '/apigen.neon';
 	$project->apiGen("$dir53/Nette", "$dir53/API-reference", $apiGenConfig, "Nette Framework $label API");
-	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2) API");
-	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2) API");
+	$project->apiGen("$dir52p/Nette", "$dir52p/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2, prefixed) API");
+	$project->apiGen("$dir52n/Nette", "$dir52n/API-reference", $apiGenConfig, "Nette Framework $label (for PHP 5.2, un-prefixed) API");
 
 	// create archives
 	if ($tag === 'master') {
