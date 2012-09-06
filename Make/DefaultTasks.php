@@ -128,6 +128,17 @@ class DefaultTasks
 
 
 	/**
+	 * Renames a file or directory.
+	 */
+	function rename($from, $to)
+	{
+		$this->project->log("Renaming $from to $to");
+		rename($from, $to);
+	}
+
+
+
+	/**
 	 * Replaces the occurrence of a given regular expression
 	 * with a substitution pattern in a file.
 	 */
