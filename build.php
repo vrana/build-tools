@@ -132,7 +132,7 @@ $project->exportGit = function($dir, $tag = NULL) use ($project) {
 	$project->gitClone('git://github.com/nette/nette.git', $tag, $dir);
 
 	if (substr($tag, 0, 4) === 'v0.9') {
-		$project->gitClone('git://github.com/dg/dibi.git', 'master', "$dir/3rdParty/dibi");
+		$project->gitClone('git://github.com/dg/dibi.git', 'v2.0.0', "$dir/3rdParty/dibi");
 		$project->write("$dir/3rdParty/dibi/netterobots.txt", 'Disallow: /dibi-minified');
 	} else {
 		$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
