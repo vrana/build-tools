@@ -45,10 +45,16 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 
 	$project->exportGit($dir53, $tag);
 
-	$project->copy("$dir53/client-side/forms/netteForms.js", "$dir53/sandbox/www/js/netteForms.js");
+	// rename *.md and delete some files
+	foreach (Finder::findFiles('*.md')->from($dir53) as $file) {
+		$project->rename($file, substr($file, 0, -2) . 'txt');
+	}
 	$project->delete("$dir53/sandbox/license.txt");
 	$project->delete("$dir53/examples/license.txt");
 	$project->delete("$dir53/tools/license.txt");
+	$project->delete("$dir53/composer.json");
+	$project->delete("$dir53/.travis.yml");
+	$project->copy("$dir53/client-side/forms/netteForms.js", "$dir53/sandbox/www/js/netteForms.js");
 
 	// build specific packages
 	$project->delete($dir52p);
