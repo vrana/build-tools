@@ -35,7 +35,7 @@ require 'tasks/php.php';
 require 'tasks/zip.php';
 
 
-$project->main = function($tag = 'master', $label = '1.0') use ($project) {
+$project->main = function($tag = 'master', $label = '2.1dev') use ($project) {
 	$project->log("Building {$label}");
 
 	$dir53 = "NetteFramework-{$label}-PHP5.3";
