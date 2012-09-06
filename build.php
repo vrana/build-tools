@@ -6,7 +6,7 @@
  * Call task 'main' to build a full release.
  * The release built will be stored in 'dist' directory.
  *
- * Can be used for version 2.0 and 0.9.5 or higher (branch v0.9.x).
+ * Can be used for version 2.0 or higher.
  */
 
 require 'tools/Nette/nette.min.php';
@@ -45,6 +45,11 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 
 	$project->exportGit($dir53, $tag);
 
+	$project->copy("$dir53/client-side/forms/netteForms.js", "$dir53/sandbox/www/js/netteForms.js");
+	$project->delete("$dir53/sandbox/license.txt");
+	$project->delete("$dir53/examples/license.txt");
+	$project->delete("$dir53/tools/license.txt");
+
 	// build specific packages
 	$project->delete($dir52p);
 	$project->copy($dir53, $dir52p);
@@ -70,23 +75,10 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 	$project->lint($dir52p, $project->php52Executable);
 	$project->lint($dir52n, $project->php52Executable);
 
-	if (substr($tag, 0, 4) !== 'v0.9') { // copy Nette to submodules
-		$project->copy("$dir53/Nette", "$dir53/sandbox/libs/Nette");
-		$project->copy("$dir52p/Nette", "$dir52p/sandbox/libs/Nette");
-		$project->copy("$dir52n/Nette", "$dir52n/sandbox/libs/Nette");
-		$project->copy("$dir53/client-side/forms/netteForms.js", "$dir53/sandbox/www/js/netteForms.js");
-		$project->copy("$dir52p/client-side/forms/netteForms.js", "$dir52p/sandbox/www/js/netteForms.js");
-		$project->copy("$dir52n/client-side/forms/netteForms.js", "$dir52n/sandbox/www/js/netteForms.js");
-		$project->delete("$dir53/sandbox/license.txt");
-		$project->delete("$dir52p/sandbox/license.txt");
-		$project->delete("$dir52n/sandbox/license.txt");
-		$project->delete("$dir53/examples/license.txt");
-		$project->delete("$dir52p/examples/license.txt");
-		$project->delete("$dir52n/examples/license.txt");
-		$project->delete("$dir53/tools/license.txt");
-		$project->delete("$dir52p/tools/license.txt");
-		$project->delete("$dir52n/tools/license.txt");
-	}
+	// copy Nette to submodules
+	$project->copy("$dir53/Nette", "$dir53/sandbox/libs/Nette");
+	$project->copy("$dir52p/Nette", "$dir52p/sandbox/libs/Nette");
+	$project->copy("$dir52n/Nette", "$dir52n/sandbox/libs/Nette");
 
 	// build API doc
 	$apiGenConfig = dirname($project->apiGenExecutable) . '/apigen.neon';
@@ -130,15 +122,9 @@ $project->main = function($tag = 'master', $label = '1.0') use ($project) {
 $project->exportGit = function($dir, $tag = NULL) use ($project) {
 	$project->delete($dir);
 	$project->gitClone('git://github.com/nette/nette.git', $tag, $dir);
-
-	if (substr($tag, 0, 4) === 'v0.9') {
-		$project->gitClone('git://github.com/dg/dibi.git', 'v2.0.0', "$dir/3rdParty/dibi");
-		$project->write("$dir/3rdParty/dibi/netterobots.txt", 'Disallow: /dibi-minified');
-	} else {
-		$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
-		$project->gitClone('git://github.com/nette/sandbox.git', $tag, "$dir/sandbox");
-		$project->gitClone('git://github.com/nette/tools.git', NULL, "$dir/tools");
-	}
+	$project->gitClone('git://github.com/nette/examples.git', $tag, "$dir/examples");
+	$project->gitClone('git://github.com/nette/sandbox.git', $tag, "$dir/sandbox");
+	$project->gitClone('git://github.com/nette/tools.git', NULL, "$dir/tools");
 
 	if (PHP_OS === 'WINNT') {
 		$project->exec("attrib -H $dir\.htaccess* /s /d");
