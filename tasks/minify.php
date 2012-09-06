@@ -116,7 +116,7 @@ class ShrinkPHP
 		}
 
 
-		$set = '!"#$&\'()*+,-./:;<=>?@[\]^`{|}';
+		$set = '!"#$%&\'()*+,-./:;<=>?@[\]^`{|}';
 		$space = $pending = FALSE;
 
 		reset($tokens);
